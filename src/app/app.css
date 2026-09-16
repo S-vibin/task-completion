@@ -1,0 +1,455 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+.game-container {
+  min-height: 100vh;
+  width: 100%;
+
+  background:
+    radial-gradient(
+      circle at center,
+      #0c2417 0%,
+      #06100a 40%,
+      #020403 75%,
+      #000000 100%
+    );
+
+  color: white;
+
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  padding: 40px;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+
+/* HEADER */
+
+.header {
+  position: absolute;
+
+  top: 28px;
+
+  left: 0;
+
+  width: 100%;
+
+  text-align: center;
+}
+
+
+.header h1 {
+  margin: 0;
+
+  font-size: 30px;
+
+  letter-spacing: 6px;
+}
+
+
+.level {
+  display: inline-block;
+
+  margin-top: 12px;
+
+  padding: 7px 20px;
+
+  border:
+    1px solid #00ff66;
+
+  border-radius: 30px;
+
+  color: #00ff66;
+
+  font-size: 14px;
+
+  letter-spacing: 3px;
+}
+
+
+/* CARD */
+
+.task-card {
+  width: 700px;
+
+  min-height: 650px;
+
+  padding: 50px 60px;
+
+  border:
+    1px solid
+    rgba(0, 255, 102, 0.6);
+
+  border-radius: 26px;
+
+  background:
+    rgba(3, 10, 6, 0.95);
+
+  box-shadow:
+    0 0 40px
+    rgba(0, 255, 102, 0.07);
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+}
+
+
+/* GAME CONTENT */
+
+.game-content {
+  width: 100%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+}
+
+
+/* QUESTION */
+
+.question {
+  width: 100%;
+
+  min-height: 120px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  text-align: center;
+}
+
+
+.question h2 {
+  max-width: 590px;
+
+  margin: 0;
+
+  font-size: 23px;
+
+  line-height: 1.5;
+
+  font-weight: 400;
+}
+
+
+/* TIMER */
+
+.timer {
+  width: 300px;
+
+  height: 300px;
+
+  position: relative;
+
+  margin-top: 20px;
+}
+
+
+/* TIMER BARS */
+
+.timer-segment {
+  position: absolute;
+
+  width: 7px;
+
+  height: 42px;
+
+  left: 50%;
+
+  top: 50%;
+
+  margin-left: -3.5px;
+
+  margin-top: -150px;
+
+  border-radius: 10px;
+
+  background: #101c15;
+
+  opacity: 0.35;
+
+  transform-origin:
+    3.5px 150px;
+
+  transition:
+    opacity 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.timer-segment.active {
+  background: #00ff66;
+
+  opacity: 1;
+
+  box-shadow:
+    0 0 10px
+    rgba(0, 255, 102, 0.8);
+}
+
+
+/* BUTTON */
+
+.hit-button {
+  position: absolute;
+
+  width: 190px;
+
+  height: 190px;
+
+  left: 50%;
+
+  top: 50%;
+
+  transform:
+    translate(-50%, -50%);
+
+  border:
+    3px solid #00ff66;
+
+  border-radius: 50%;
+
+  background: #06170d;
+
+  color: white;
+
+  cursor: pointer;
+
+  overflow: hidden;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  z-index: 5;
+
+  box-shadow:
+    0 0 25px
+    rgba(0, 255, 102, 0.35),
+
+    inset 0 0 25px
+    rgba(0, 255, 102, 0.08);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+.hit-button:hover {
+  transform:
+    translate(-50%, -50%)
+    scale(1.05);
+
+  box-shadow:
+    0 0 45px
+    rgba(0, 255, 102, 0.65);
+}
+
+
+.hit-button:active {
+  transform:
+    translate(-50%, -50%)
+    scale(0.96);
+}
+
+
+.hit-button:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.55;
+}
+
+
+/* IMAGE */
+
+.task-image {
+  position: absolute;
+
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
+
+  border-radius: 50%;
+
+  pointer-events: none;
+
+  opacity: 0.7;
+}
+
+
+/* BUTTON TEXT */
+
+.button-text {
+  position: relative;
+
+  z-index: 2;
+
+  font-size: 25px;
+
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+  color: white;
+
+  text-shadow:
+    0 2px 10px black,
+    0 0 10px black;
+}
+
+
+/* MESSAGE */
+
+.message {
+  margin-top: 25px;
+
+  font-size: 19px;
+
+  font-weight: 600;
+
+  color: #00ff66;
+
+  text-align: center;
+}
+
+
+/* GAME OVER */
+
+.game-over {
+  text-align: center;
+
+  margin-top: 18px;
+}
+
+
+.game-over h2 {
+  color: #ff3b3b;
+
+  letter-spacing: 5px;
+}
+
+
+.game-over p {
+  color: #aaa;
+}
+
+
+/* RESTART */
+
+.restart-button {
+  padding: 12px 28px;
+
+  border:
+    1px solid #00ff66;
+
+  border-radius: 8px;
+
+  background: transparent;
+
+  color: #00ff66;
+
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+
+.restart-button:hover {
+  background: #00ff66;
+
+  color: #020303;
+}
+
+
+/* WIN SCREEN */
+
+.win-screen {
+  text-align: center;
+}
+
+
+.win-icon {
+  font-size: 70px;
+}
+
+
+.win-screen h2 {
+  color: #00ff66;
+
+  letter-spacing: 4px;
+}
+
+
+.win-screen p {
+  color: #aaa;
+
+  font-size: 17px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 750px) {
+
+  .task-card {
+    width: 95%;
+
+    min-height: 600px;
+
+    padding:
+      35px 20px;
+  }
+
+
+  .header h1 {
+    font-size: 22px;
+
+    letter-spacing: 4px;
+  }
+
+
+  .question h2 {
+    font-size: 19px;
+  }
+
+
+  .timer {
+    width: 270px;
+
+    height: 270px;
+  }
+
+}
