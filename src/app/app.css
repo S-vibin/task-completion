@@ -1,455 +1,448 @@
 :host {
   display: block;
-  min-height: 100vh;
+  width: 100%;
+  height: 100%;
 }
 
-* {
+.game-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
   box-sizing: border-box;
 }
 
-
-.game-container {
-  min-height: 100vh;
+/* CARD */
+.card {
   width: 100%;
-
-  background:
-    radial-gradient(
-      circle at center,
-      #0c2417 0%,
-      #06100a 40%,
-      #020403 75%,
-      #000000 100%
-    );
-
-  color: white;
-
-  font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
-
+  max-width: 520px;
+  background: rgba(20, 20, 26, 0.85);
+  border: 1px solid rgba(0, 255, 200, 0.15);
+  border-radius: 24px;
+  padding: 40px 36px;
+  box-sizing: border-box;
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 0 40px rgba(0, 255, 200, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.02) inset,
+    0 20px 60px rgba(0, 0, 0, 0.6);
   display: flex;
-
-  justify-content: center;
-
-  align-items: center;
-
-  padding: 40px;
-
-  position: relative;
-
-  overflow: hidden;
+  flex-direction: column;
+  gap: 28px;
+  animation: fadeIn 0.4s ease;
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 /* HEADER */
-
 .header {
-  position: absolute;
-
-  top: 28px;
-
-  left: 0;
-
-  width: 100%;
-
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
   text-align: center;
 }
 
-
-.header h1 {
+.title {
   margin: 0;
-
-  font-size: 30px;
-
-  letter-spacing: 6px;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 4px;
+  background: linear-gradient(90deg, #00ff66, #2979ff, #aa00ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 30px rgba(0, 255, 150, 0.25);
 }
 
-
-.level {
-  display: inline-block;
-
-  margin-top: 12px;
-
-  padding: 7px 20px;
-
-  border:
-    1px solid #00ff66;
-
-  border-radius: 30px;
-
-  color: #00ff66;
-
-  font-size: 14px;
-
-  letter-spacing: 3px;
+.level-counter {
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  color: #9aa0a6;
+  font-weight: 600;
+  padding: 4px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
 }
 
-
-/* CARD */
-
-.task-card {
-  width: 700px;
-
-  min-height: 650px;
-
-  padding: 50px 60px;
-
-  border:
-    1px solid
-    rgba(0, 255, 102, 0.6);
-
-  border-radius: 26px;
-
-  background:
-    rgba(3, 10, 6, 0.95);
-
-  box-shadow:
-    0 0 40px
-    rgba(0, 255, 102, 0.07);
-
+/* GENERIC SCREEN (start / cooldown / game over / win) */
+.screen {
   display: flex;
-
-  justify-content: center;
-
-  align-items: center;
-}
-
-
-/* GAME CONTENT */
-
-.game-content {
-  width: 100%;
-
-  display: flex;
-
   flex-direction: column;
-
   align-items: center;
+  gap: 10px;
+  text-align: center;
+  padding: 20px 0;
 }
 
+.big-icon {
+  font-size: 4rem;
+  line-height: 1;
+  margin-bottom: 4px;
+}
 
-/* QUESTION */
+.screen-title {
+  margin: 0;
+  font-size: 1.7rem;
+  letter-spacing: 3px;
+  font-weight: 800;
+}
+
+.game-over .screen-title {
+  color: #ff1744;
+  text-shadow: 0 0 25px rgba(255, 23, 68, 0.6);
+}
+
+.screen-title.win {
+  color: #00ff66;
+  text-shadow: 0 0 25px rgba(0, 255, 102, 0.6);
+}
+
+.screen-message {
+  margin: 0;
+  color: #c7c9cc;
+  font-size: 1rem;
+}
+
+/* COOLDOWN */
+.cooldown {
+  padding: 30px 0;
+}
+
+.pulse-ring {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 3px solid rgba(41, 121, 255, 0.6);
+  box-shadow: 0 0 25px rgba(41, 121, 255, 0.5);
+  animation: pulseRing 1s ease-in-out infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes pulseRing {
+  0% { transform: scale(0.85); opacity: 0.6; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(0.85); opacity: 0.6; }
+}
+
+/* GAME AREA */
+.game-area {
+  display: flex;
+  justify-content: center;
+}
+
+.task-block {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
 
 .question {
-  width: 100%;
-
-  min-height: 120px;
-
-  display: flex;
-
-  justify-content: center;
-
-  align-items: center;
-
-  text-align: center;
-}
-
-
-.question h2 {
-  max-width: 590px;
-
   margin: 0;
-
-  font-size: 23px;
-
+  text-align: center;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #f2f3f5;
   line-height: 1.5;
-
-  font-weight: 400;
 }
 
+@keyframes pulseNumber {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
 
-/* TIMER */
+/* STIMULUS DISPLAY (for rule-recall / conditional levels) */
+.stimulus-display {
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 14px 28px;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
 
-.timer {
-  width: 300px;
-
-  height: 300px;
-
+/* COUNTDOWN RING (wraps around the circular button) */
+.ring-wrapper {
   position: relative;
-
-  margin-top: 20px;
-}
-
-
-/* TIMER BARS */
-
-.timer-segment {
-  position: absolute;
-
-  width: 7px;
-
-  height: 42px;
-
-  left: 50%;
-
-  top: 50%;
-
-  margin-left: -3.5px;
-
-  margin-top: -150px;
-
-  border-radius: 10px;
-
-  background: #101c15;
-
-  opacity: 0.35;
-
-  transform-origin:
-    3.5px 150px;
-
-  transition:
-    opacity 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-
-.timer-segment.active {
-  background: #00ff66;
-
-  opacity: 1;
-
-  box-shadow:
-    0 0 10px
-    rgba(0, 255, 102, 0.8);
-}
-
-
-/* BUTTON */
-
-.hit-button {
-  position: absolute;
-
-  width: 190px;
-
-  height: 190px;
-
-  left: 50%;
-
-  top: 50%;
-
-  transform:
-    translate(-50%, -50%);
-
-  border:
-    3px solid #00ff66;
-
-  border-radius: 50%;
-
-  background: #06170d;
-
-  color: white;
-
-  cursor: pointer;
-
-  overflow: hidden;
-
+  width: 200px;
+  height: 200px;
   display: flex;
-
-  justify-content: center;
-
   align-items: center;
-
-  z-index: 5;
-
-  box-shadow:
-    0 0 25px
-    rgba(0, 255, 102, 0.35),
-
-    inset 0 0 25px
-    rgba(0, 255, 102, 0.08);
-
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  justify-content: center;
 }
 
+.ring-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ring-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 10;
+}
+
+.ring-progress {
+  fill: none;
+  stroke: #00e5ff;
+  stroke-width: 10;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
+  filter: drop-shadow(0 0 6px rgba(0, 229, 255, 0.6));
+}
+
+.ring-progress.critical {
+  stroke: #ff1744;
+  filter: drop-shadow(0 0 10px rgba(255, 23, 68, 0.9));
+}
+
+/* small badge floating on top of the ring, used when a button sits in the center */
+.ring-number-badge {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  background: #0f0f14;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  padding: 4px 16px;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  transition: color 0.2s ease;
+}
+
+.ring-number-badge.critical {
+  color: #ff1744;
+  border-color: rgba(255, 23, 68, 0.5);
+  animation: pulseNumber 0.6s ease-in-out infinite;
+}
+
+/* large centered number used when there is no button (input levels) */
+.ring-number-center {
+  position: relative;
+  z-index: 2;
+  font-size: 3.4rem;
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.25);
+  transition: color 0.2s ease;
+}
+
+.ring-number-center.critical {
+  color: #ff1744;
+  text-shadow: 0 0 25px rgba(255, 23, 68, 0.8);
+  animation: pulseNumber 0.6s ease-in-out infinite;
+}
+
+.ring-wrapper.standalone {
+  width: 160px;
+  height: 160px;
+}
+
+/* HIT BUTTON */
+.hit-button {
+  position: relative;
+  z-index: 2;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  color: #08110d;
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+  outline: none;
+}
 
 .hit-button:hover {
-  transform:
-    translate(-50%, -50%)
-    scale(1.05);
-
-  box-shadow:
-    0 0 45px
-    rgba(0, 255, 102, 0.65);
+  transform: scale(1.06);
 }
-
 
 .hit-button:active {
-  transform:
-    translate(-50%, -50%)
-    scale(0.96);
+  transform: scale(0.94);
 }
 
-
-.hit-button:disabled {
-  cursor: not-allowed;
-
-  opacity: 0.55;
-}
-
-
-/* IMAGE */
-
-.task-image {
-  position: absolute;
-
-  width: 100%;
-
-  height: 100%;
-
-  object-fit: cover;
-
-  border-radius: 50%;
-
-  pointer-events: none;
-
-  opacity: 0.7;
-}
-
-
-/* BUTTON TEXT */
-
-.button-text {
-  position: relative;
-
-  z-index: 2;
-
-  font-size: 25px;
-
-  font-weight: 700;
-
-  letter-spacing: 2px;
-
-  color: white;
-
-  text-shadow:
-    0 2px 10px black,
-    0 0 10px black;
-}
-
-
-/* MESSAGE */
-
-.message {
-  margin-top: 25px;
-
-  font-size: 19px;
-
-  font-weight: 600;
-
-  color: #00ff66;
-
-  text-align: center;
-}
-
-
-/* GAME OVER */
-
-.game-over {
-  text-align: center;
-
-  margin-top: 18px;
-}
-
-
-.game-over h2 {
-  color: #ff3b3b;
-
-  letter-spacing: 5px;
-}
-
-
-.game-over p {
-  color: #aaa;
-}
-
-
-/* RESTART */
-
-.restart-button {
-  padding: 12px 28px;
-
-  border:
-    1px solid #00ff66;
-
-  border-radius: 8px;
-
-  background: transparent;
-
-  color: #00ff66;
-
-  font-weight: bold;
-
-  cursor: pointer;
-}
-
-
-.restart-button:hover {
+.hit-button.green {
   background: #00ff66;
-
-  color: #020303;
+  box-shadow: 0 0 25px 6px rgba(0, 255, 102, 0.55), 0 0 60px rgba(0, 255, 102, 0.25);
 }
 
-
-/* WIN SCREEN */
-
-.win-screen {
-  text-align: center;
+.hit-button.red {
+  background: #ff1744;
+  color: #1a0508;
+  box-shadow: 0 0 25px 6px rgba(255, 23, 68, 0.55), 0 0 60px rgba(255, 23, 68, 0.25);
 }
 
-
-.win-icon {
-  font-size: 70px;
+.hit-button.blue {
+  background: #2979ff;
+  color: #051023;
+  box-shadow: 0 0 25px 6px rgba(41, 121, 255, 0.55), 0 0 60px rgba(41, 121, 255, 0.25);
 }
 
-
-.win-screen h2 {
-  color: #00ff66;
-
-  letter-spacing: 4px;
+.hit-button.yellow {
+  background: #ffd600;
+  color: #221c00;
+  box-shadow: 0 0 25px 6px rgba(255, 214, 0, 0.55), 0 0 60px rgba(255, 214, 0, 0.25);
 }
 
-
-.win-screen p {
-  color: #aaa;
-
-  font-size: 17px;
+.hit-button.purple {
+  background: #aa00ff;
+  color: #14001f;
+  box-shadow: 0 0 25px 6px rgba(170, 0, 255, 0.55), 0 0 60px rgba(170, 0, 255, 0.25);
 }
 
+.hit-button.white {
+  background: #eef6f8;
+  color: #0a1618;
+  box-shadow: 0 0 25px 6px rgba(0, 229, 255, 0.4), 0 0 60px rgba(0, 229, 255, 0.2);
+}
 
-/* MOBILE */
+/* INPUT ROW */
+.input-row {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+}
 
-@media (max-width: 750px) {
+.answer-input {
+  flex: 1;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #0f0f14;
+  color: #ffffff;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
 
-  .task-card {
-    width: 95%;
+.answer-input::placeholder {
+  color: #6b7076;
+}
 
-    min-height: 600px;
+.answer-input:focus {
+  border-color: #00ff66;
+  box-shadow: 0 0 12px rgba(0, 255, 102, 0.35);
+}
 
-    padding:
-      35px 20px;
+/* GENERIC ACTION BUTTONS */
+.action-btn {
+  padding: 14px 26px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+}
+
+.action-btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.action-btn.success {
+  background: #00ff66;
+  color: #08110d;
+  box-shadow: 0 0 20px rgba(0, 255, 102, 0.45);
+}
+
+.action-btn.danger {
+  background: #ff1744;
+  color: #1a0508;
+  box-shadow: 0 0 20px rgba(255, 23, 68, 0.45);
+}
+
+.submit-btn {
+  white-space: nowrap;
+}
+
+.start-btn {
+  min-width: 160px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .card {
+    padding: 28px 20px;
+    border-radius: 18px;
+    gap: 20px;
   }
 
-
-  .header h1 {
-    font-size: 22px;
-
-    letter-spacing: 4px;
+  .title {
+    font-size: 1.5rem;
+    letter-spacing: 2px;
   }
 
-
-  .question h2 {
-    font-size: 19px;
+  .hit-button {
+    width: 110px;
+    height: 110px;
+    font-size: 1.1rem;
   }
 
-
-  .timer {
-    width: 270px;
-
-    height: 270px;
+  .ring-wrapper {
+    width: 150px;
+    height: 150px;
   }
 
+  .ring-wrapper.standalone {
+    width: 130px;
+    height: 130px;
+  }
+
+  .ring-number-center {
+    font-size: 2.6rem;
+  }
+
+  .ring-number-badge {
+    font-size: 1rem;
+    padding: 3px 12px;
+  }
+
+  .stimulus-display {
+    font-size: 1.6rem;
+    padding: 10px 18px;
+  }
+
+  .input-row {
+    flex-direction: column;
+  }
+
+  .submit-btn {
+    width: 100%;
+  }
+
+  .question {
+    font-size: 1rem;
+  }
+
+  .big-icon {
+    font-size: 3rem;
+  }
 }

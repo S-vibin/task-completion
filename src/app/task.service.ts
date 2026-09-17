@@ -1,297 +1,268 @@
 import { Injectable } from '@angular/core';
 
+export interface Task {
+  question: string;
+  type: 'start' | 'press' | 'dont-press' | 'input' | 'rule' | 'conditional';
+  answer: string;
+  buttonColor?: 'green' | 'red' | 'blue' | 'yellow' | 'purple' | 'white';
+  /** Large centered word/number shown for 'conditional' levels (the thing the rule applies to). */
+  stimulus?: string;
+  /** For 'conditional' levels: the correct action once the earlier rule is applied. */
+  correctAction?: 'press' | 'dont-press';
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class TaskService {
 
-  currentLevel = 0;
+  private currentLevel = 1;
 
-  tasks = [
-
+  private tasks: Task[] = [
     // LEVEL 1
     {
-      level: 1,
-      type: 'start',
       question: 'Ready to test your memory and reaction? Shall we begin?',
-      button: 'START',
-      image: ''
+      type: 'start',
+      answer: ''
     },
-
     // LEVEL 2
     {
-      level: 2,
-      type: 'press',
-      question: '➕ What is 5 + 7?',
-      button: '12',
-      image: ''
+      question: 'What is 5 + 7?',
+      type: 'input',
+      answer: '12'
     },
-
     // LEVEL 3
     {
-      level: 3,
+      question: 'DO NOT PRESS the BLUE button.',
       type: 'dont-press',
-      question: '🔵 If the circle is BLUE, do NOT press the button.',
-      button: 'HIT',
-      image: 'https://loremflickr.com/300/300/blue,circle'
+      answer: '',
+      buttonColor: 'blue'
     },
-
     // LEVEL 4
     {
-      level: 4,
+      question: 'PRESS the GREEN button!',
       type: 'press',
-      question: '🔢 Is 11 a PRIME number?',
-      button: 'YES',
-      image: ''
+      answer: '',
+      buttonColor: 'green'
     },
-
     // LEVEL 5
     {
-      level: 5,
-      type: 'dont-press',
-      question: '🍎 You see an APPLE. Do NOT press.',
-      button: 'HIT',
-      image: 'https://loremflickr.com/300/300/apple'
+      question: 'What is 10 + 15?',
+      type: 'input',
+      answer: '25'
     },
-
     // LEVEL 6
     {
-      level: 6,
+      question: 'PRESS the RED button!',
       type: 'press',
-      question: '🐱 If you see a CAT, press the button.',
-      button: 'HIT',
-      image: 'https://loremflickr.com/300/300/cat'
+      answer: '',
+      buttonColor: 'red'
     },
-
     // LEVEL 7
     {
-      level: 7,
+      question: 'DO NOT PRESS the YELLOW button.',
       type: 'dont-press',
-      question: '🚗 If you see a CAR, do NOT press.',
-      button: 'HIT',
-      image: 'https://loremflickr.com/300/300/car'
+      answer: '',
+      buttonColor: 'yellow'
     },
-
-    // LEVEL 8
+    // LEVEL 8 — teaches RULE #1
     {
-      level: 8,
-      type: 'press',
-      question: '🧮 8 × 7 = 56. Press the button.',
-      button: 'HIT',
-      image: ''
+      question: 'RULE #1: If you see a RAT, DO NOT press the button. For any OTHER animal, PRESS it! Memorize this rule...',
+      type: 'rule',
+      answer: '',
+      buttonColor: 'blue'
     },
-
-    // LEVEL 9
+    // LEVEL 9 — tests RULE #1
     {
-      level: 9,
-      type: 'dont-press',
-      question: '🔺 If the image contains a TRIANGLE, do NOT press.',
-      button: 'HIT',
-      image: 'https://loremflickr.com/300/300/triangle,shape'
+      question: 'An animal appears! Apply RULE #1 — what do you do?',
+      type: 'conditional',
+      answer: '',
+      buttonColor: 'white',
+      stimulus: '🐶 DOG',
+      correctAction: 'press'
     },
-
     // LEVEL 10
     {
-      level: 10,
-      type: 'press',
-      question: '🧠 Remember Level 5. What fruit appeared there?',
-      button: 'APPLE',
-      image: ''
+      question: 'What was your answer in Level 2?',
+      type: 'input',
+      answer: '12'
     },
-
     // LEVEL 11
     {
-      level: 11,
-      type: 'press',
-      question: '🔢 Is 29 a PRIME number?',
-      button: 'YES',
-      image: ''
+      question: 'Is 29 a PRIME number? Type YES or NO.',
+      type: 'input',
+      answer: 'yes'
     },
-
-    // LEVEL 12
+    // LEVEL 12 — tests RULE #1
     {
-      level: 12,
-      type: 'dont-press',
-      question: '🐶 You see a DOG. Do NOT press.',
-      button: 'HIT',
-      image: 'https://loremflickr.com/300/300/dog'
+      question: 'An animal appears! Apply RULE #1 — what do you do?',
+      type: 'conditional',
+      answer: '',
+      buttonColor: 'white',
+      stimulus: '🐀 RAT',
+      correctAction: 'dont-press'
     },
-
     // LEVEL 13
     {
-      level: 13,
-      type: 'press',
-      question: '🧮 (10 + 5) × 2 = 30. Press.',
-      button: '30',
-      image: ''
+      question: 'What is (10 + 5) × 2?',
+      type: 'input',
+      answer: '30'
     },
-
     // LEVEL 14
     {
-      level: 14,
+      question: 'DO NOT PRESS the PURPLE button.',
       type: 'dont-press',
-      question: '🟡 If the object is YELLOW, do NOT press.',
-      button: 'HIT',
-      image: 'https://loremflickr.com/300/300/yellow,object'
+      answer: '',
+      buttonColor: 'purple'
     },
-
-    // LEVEL 15
+    // LEVEL 15 — memory callback to Level 12's stimulus
     {
-      level: 15,
-      type: 'press',
-      question: '🧠 What animal appeared in Level 12?',
-      button: 'DOG',
-      image: ''
+      question: 'What animal appeared in Level 12? Type the answer.',
+      type: 'input',
+      answer: 'rat'
     },
-
-    // LEVEL 16
+    // LEVEL 16 — teaches RULE #2
     {
-      level: 16,
-      type: 'dont-press',
-      question: '🐱 You saw a CAT earlier. If you see it again, do NOT press.',
-      button: 'HIT',
-      image: 'https://loremflickr.com/300/300/cat'
+      question: 'RULE #2: If the number shown is a PRIME number, DO NOT press. If it is NOT prime, PRESS it!',
+      type: 'rule',
+      answer: '',
+      buttonColor: 'blue'
     },
-
-    // LEVEL 17
+    // LEVEL 17 — tests RULE #2 (14 is not prime)
     {
-      level: 17,
-      type: 'press',
-      question: '🔢 37 is PRIME. Press the button.',
-      button: 'HIT',
-      image: ''
+      question: 'A number appears! Apply RULE #2 — what do you do?',
+      type: 'conditional',
+      answer: '',
+      buttonColor: 'white',
+      stimulus: '14',
+      correctAction: 'press'
     },
-
     // LEVEL 18
     {
-      level: 18,
+      question: 'DO NOT PRESS the YELLOW button.',
       type: 'dont-press',
-      question: '🚗 Remember Level 7. The CAR rule still applies.',
-      button: 'HIT',
-      image: 'https://loremflickr.com/300/300/car'
+      answer: '',
+      buttonColor: 'yellow'
     },
-
     // LEVEL 19
     {
-      level: 19,
-      type: 'press',
-      question: '🧮 9 × 9 = 81. Press the button.',
-      button: '81',
-      image: ''
+      question: 'What is 9 × 9?',
+      type: 'input',
+      answer: '81'
     },
-
-    // LEVEL 20
+    // LEVEL 20 — tests RULE #2 (17 is prime)
     {
-      level: 20,
-      type: 'dont-press',
-      question: '👻 No instructions. Think about the previous levels.',
-      button: 'HIT',
-      image: 'https://loremflickr.com/300/300/ghost'
+      question: 'A number appears! Apply RULE #2 — what do you do?',
+      type: 'conditional',
+      answer: '',
+      buttonColor: 'white',
+      stimulus: '17',
+      correctAction: 'dont-press'
     },
-
     // LEVEL 21
     {
-      level: 21,
-      type: 'press',
-      question: '🧠 What number was the answer in Level 2?',
-      button: '12',
-      image: ''
+      question: 'What was your answer in Level 2?',
+      type: 'input',
+      answer: '12'
     },
-
     // LEVEL 22
     {
-      level: 22,
+      question: 'DO NOT PRESS the YELLOW button.',
       type: 'dont-press',
-      question: '🍎 Remember the fruit from Level 5. If it appears again, do NOT press.',
-      button: 'HIT',
-      image: 'https://loremflickr.com/300/300/apple'
+      answer: '',
+      buttonColor: 'yellow'
     },
-
     // LEVEL 23
     {
-      level: 23,
-      type: 'press',
-      question: '🧠 What number did you see in Level 13?',
-      button: '30',
-      image: ''
+      question: 'What was your answer in Level 13?',
+      type: 'input',
+      answer: '30'
     },
-
-    // LEVEL 24
+    // LEVEL 24 — tests RULE #1 again, further apart
     {
-      level: 24,
-      type: 'dont-press',
-      question: '🐶 No instructions. Remember the animal from Level 12.',
-      button: 'HIT',
-      image: 'https://loremflickr.com/300/300/dog'
+      question: 'An animal appears! Apply RULE #1 — what do you do?',
+      type: 'conditional',
+      answer: '',
+      buttonColor: 'white',
+      stimulus: '🐱 CAT',
+      correctAction: 'press'
     },
-
-    // LEVEL 25
+    // LEVEL 25 — memory callback to Level 20's stimulus
     {
-      level: 25,
-      type: 'press',
-      question: '🧠 Level 11 asked about which PRIME number?',
-      button: '29',
-      image: ''
+      question: 'What number appeared in Level 20?',
+      type: 'input',
+      answer: '17'
     },
-
     // LEVEL 26
     {
-      level: 26,
+      question: 'DO NOT PRESS the YELLOW button.',
       type: 'dont-press',
-      question: '⚠️ No instructions. Remember the color rule from Level 14.',
-      button: 'HIT',
-      image: 'https://loremflickr.com/300/300/yellow,object'
+      answer: '',
+      buttonColor: 'yellow'
     },
-
     // LEVEL 27
     {
-      level: 27,
-      type: 'press',
-      question: '🧠 Level 19 answer + Level 2 answer = ?',
-      button: '93',
-      image: ''
+      question: 'What is your Level 19 answer + your Level 2 answer?',
+      type: 'input',
+      answer: '93'
     },
-
-    // LEVEL 28
+    // LEVEL 28 — final RULE #1 test, right before the end
     {
-      level: 28,
-      type: 'dont-press',
-      question: '🐱🚗 Two previous objects return. Remember both rules.',
-      button: 'HIT',
-      image: 'https://loremflickr.com/300/300/cat,car'
+      question: 'An animal appears! Apply RULE #1 — what do you do?',
+      type: 'conditional',
+      answer: '',
+      buttonColor: 'white',
+      stimulus: '🐀 RAT',
+      correctAction: 'dont-press'
     },
-
     // LEVEL 29
     {
-      level: 29,
-      type: 'press',
-      question: '🧠 29 + 30 + 12 = ?',
-      button: '71',
-      image: ''
+      question: 'What is 29 + 30 + 12?',
+      type: 'input',
+      answer: '71'
     },
-
     // LEVEL 30
     {
-      level: 30,
+      question: 'DO NOT PRESS the RED button. Survive the final challenge!',
       type: 'dont-press',
-      question: '💀 FINAL LEVEL — No instructions. Remember everything.',
-      button: 'HIT',
-      image: 'https://loremflickr.com/300/300/mystery'
+      answer: '',
+      buttonColor: 'red'
     }
-
   ];
 
-  getCurrentTask() {
-    return this.tasks[this.currentLevel];
+  /** Total number of levels in the game. */
+  getTotalLevels(): number {
+    return this.tasks.length;
   }
 
-  nextLevel() {
-    if (this.currentLevel < this.tasks.length - 1) {
+  /** The current level number (1-based). */
+  getCurrentLevelNumber(): number {
+    return this.currentLevel;
+  }
+
+  /** Returns the Task object for the current level. */
+  getCurrentTask(): Task {
+    return this.tasks[this.currentLevel - 1];
+  }
+
+  /** True if the current level is the final level. */
+  isLastLevel(): boolean {
+    return this.currentLevel === this.tasks.length;
+  }
+
+  /**
+   * Advances to the next level, if one exists.
+   * Returns the new current task.
+   */
+  nextLevel(): Task {
+    if (this.currentLevel < this.tasks.length) {
       this.currentLevel++;
     }
+    return this.getCurrentTask();
   }
 
-  restart() {
-    this.currentLevel = 0;
+  /** Resets the game back to level 1 (the start screen). */
+  restart(): void {
+    this.currentLevel = 1;
   }
 }

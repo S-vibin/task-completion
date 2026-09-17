@@ -1,188 +1,115 @@
-<div class="game-container">
+<div class="game-wrapper">
+  <div class="card">
 
-  <!-- HEADER -->
+    <!-- HEADER -->
+    <header class="header">
+      <h1 class="title">TASK CHALLENGE</h1>
+      <div class="level-counter" *ngIf="!gameOver() && !gameWon()">
+        LEVEL {{ levelNumber() }} / {{ totalLevels }}
+      </div>
+    </header>
 
-  <div class="header">
-
-    <h1>⚠️ TASK CHALLENGE</h1>
-
-    <div class="level">
-
-      LEVEL
-      {{ taskService.currentLevel + 1 }}
-      /
-      {{ taskService.tasks.length }}
-
-    </div>
-
-  </div>
-
-
-  <!-- GAME CARD -->
-
-  <div class="task-card">
-
+    <!-- GAME OVER SCREEN -->
+    <section class="screen game-over" *ngIf="gameOver()">
+      <div class="big-icon">💀</div>
+      <h2 class="screen-title">GAME OVER</h2>
+      <p class="screen-message">{{ message() || 'Your reaction failed.' }}</p>
+      <button class="action-btn danger" (click)="restartGame()">PLAY AGAIN</button>
+    </section>
 
     <!-- WIN SCREEN -->
+    <section class="screen game-won" *ngIf="gameWon() && !gameOver()">
+      <div class="big-icon">🏆</div>
+      <h2 class="screen-title win">CHALLENGE COMPLETE</h2>
+      <p class="screen-message">You completed all 30 levels!</p>
+      <button class="action-btn success" (click)="restartGame()">PLAY AGAIN</button>
+    </section>
 
-    <div
-      class="win-screen"
-      *ngIf="gameWon"
-    >
+    <!-- COOLDOWN SCREEN -->
+    <section class="screen cooldown" *ngIf="isCooldown() && !gameOver() && !gameWon()">
+      <div class="pulse-ring"></div>
+      <h2 class="screen-title">GET READY</h2>
+      <p class="screen-message">Next challenge...</p>
+    </section>
 
-      <div class="win-icon">
-        🏆
+    <!-- ACTIVE GAME AREA -->
+    <section class="game-area" *ngIf="!gameOver() && !gameWon() && !isCooldown()">
+
+      <!-- START LEVEL -->
+      <div class="task-block" *ngIf="currentTask().type === 'start'">
+        <p class="question">{{ currentTask().question }}</p>
+        <button class="action-btn success start-btn" (click)="onStartGame()">START</button>
       </div>
 
-      <h2>
-        CHALLENGE COMPLETE
-      </h2>
+      <!-- PRESS / DONT-PRESS / RULE / CONDITIONAL LEVELS (ring + circular button) -->
+      <div class="task-block" *ngIf="isButtonTask(currentTask())">
+        <p class="question">{{ currentTask().question }}</p>
 
-      <p>
-        You completed all 30 levels!
-      </p>
-
-      <button
-        class="restart-button"
-        (click)="restartGame()"
-      >
-        PLAY AGAIN
-      </button>
-
-    </div>
-
-
-    <!-- GAME CONTENT -->
-
-    <div
-      class="game-content"
-      *ngIf="!gameWon"
-    >
-
-
-      <!-- QUESTION -->
-
-      <div class="question">
-
-        <h2>
-          {{ taskService.getCurrentTask().question }}
-        </h2>
-
-      </div>
-
-
-      <!-- TIMER -->
-
-      <div class="timer">
-
-
-        <!-- 10 BARS -->
-
-        <div
-          class="timer-segment"
-
-          *ngFor="
-            let segment of
-            [1,2,3,4,5,6,7,8,9,10];
-
-            let i = index
-          "
-
-          [class.active]="
-            i < timeLeft
-          "
-
-          [style.transform]="
-            'rotate(' + (i * 36) + 'deg)'
-          "
-        >
+        <!-- Stimulus shown for conditional (rule-recall) levels -->
+        <div class="stimulus-display" *ngIf="currentTask().type === 'conditional'">
+          {{ currentTask().stimulus }}
         </div>
 
+        <div class="ring-wrapper">
+          <svg class="ring-svg" viewBox="0 0 200 200">
+            <circle class="ring-bg" cx="100" cy="100" [attr.r]="ringRadius"></circle>
+            <circle
+              class="ring-progress"
+              [class.critical]="isTimerCritical()"
+              cx="100" cy="100" [attr.r]="ringRadius"
+              [attr.stroke-dasharray]="ringCircumference"
+              [attr.stroke-dashoffset]="ringOffset()">
+            </circle>
+          </svg>
 
-        <!-- BUTTON -->
+          <div class="ring-number-badge" [class.critical]="isTimerCritical()">
+            {{ timeLeft() }}
+          </div>
 
-        <button
-
-          class="hit-button"
-
-          [disabled]="
-            gameOver ||
-            completed
-          "
-
-          (click)="hitButton()"
-        >
-
-
-          <!-- IMAGE -->
-
-          <img
-
-            *ngIf="
-              taskService.getCurrentTask().image
-            "
-
-            [src]="
-              taskService.getCurrentTask().image
-            "
-
-            class="task-image"
-          >
-
-
-          <!-- BUTTON TEXT -->
-
-          <span class="button-text">
-
-            {{ taskService.getCurrentTask().button }}
-
-          </span>
-
-
-        </button>
-
+          <button
+            class="hit-button"
+            [ngClass]="currentTask().buttonColor"
+            (click)="onHitPress()">
+            {{ buttonLabel(currentTask()) }}
+          </button>
+        </div>
       </div>
 
+      <!-- INPUT LEVELS -->
+      <div class="task-block" *ngIf="currentTask().type === 'input'">
+        <p class="question">{{ currentTask().question }}</p>
 
-      <!-- MESSAGE -->
+        <div class="ring-wrapper standalone">
+          <svg class="ring-svg" viewBox="0 0 200 200">
+            <circle class="ring-bg" cx="100" cy="100" [attr.r]="ringRadius"></circle>
+            <circle
+              class="ring-progress"
+              [class.critical]="isTimerCritical()"
+              cx="100" cy="100" [attr.r]="ringRadius"
+              [attr.stroke-dasharray]="ringCircumference"
+              [attr.stroke-dashoffset]="ringOffset()">
+            </circle>
+          </svg>
 
-      <div
-        class="message"
-        *ngIf="message"
-      >
+          <div class="ring-number-center" [class.critical]="isTimerCritical()">
+            {{ timeLeft() }}
+          </div>
+        </div>
 
-        {{ message }}
-
+        <div class="input-row">
+          <input
+            type="text"
+            class="answer-input"
+            [(ngModel)]="userAnswer"
+            (keyup.enter)="onSubmitAnswer()"
+            placeholder="Type your answer..."
+            autocomplete="off"
+          />
+          <button class="action-btn success submit-btn" (click)="onSubmitAnswer()">SUBMIT</button>
+        </div>
       </div>
 
-
-      <!-- GAME OVER -->
-
-      <div
-        class="game-over"
-        *ngIf="gameOver"
-      >
-
-        <h2>
-          GAME OVER
-        </h2>
-
-        <p>
-          Your reaction failed.
-        </p>
-
-        <button
-          class="restart-button"
-          (click)="restartGame()"
-        >
-          PLAY AGAIN
-        </button>
-
-      </div>
-
-
-    </div>
+    </section>
 
   </div>
-
 </div>
